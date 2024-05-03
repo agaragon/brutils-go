@@ -28,7 +28,7 @@ func TestValidate(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	for range(1000) {
+	for range 1000 {
 		generatedEmail := email.Generate()
 		if !email.IsValid(generatedEmail) {
 			t.Errorf("The generated email is not valid %s", generatedEmail)

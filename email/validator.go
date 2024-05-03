@@ -6,27 +6,27 @@ import (
 	"strings"
 )
 
-func IsValid(email string)bool {
+func IsValid(email string) bool {
 	/*
-    Check if a string corresponds to a valid email address.
+	   Check if a string corresponds to a valid email address.
 
-    Args:
-        email(str): The input string to be checked.
+	   Args:
+	       email(str): The input string to be checked.
 
-    Returns:
-        bool: True if email is a valid email address, False otherwise.
+	   Returns:
+	       bool: True if email is a valid email address, False otherwise.
 
-    Example:
-        >>> isVaild("brutils@brutils.com")
-        True
-        >>> isVaild("invalid-email@brutils")
-        False
+	   Example:
+	       >>> isVaild("brutils@brutils.com")
+	       True
+	       >>> isVaild("invalid-email@brutils")
+	       False
 
-    .. note::
-        The rules for validating an email address generally follow the
-        specifications defined by RFC 5322 (updated by RFC 5322bis),
-        which is the widely accepted standard for email address formats.
-    */
+	   .. note::
+	       The rules for validating an email address generally follow the
+	       specifications defined by RFC 5322 (updated by RFC 5322bis),
+	       which is the widely accepted standard for email address formats.
+	*/
 	regexPattern := `^[a-zA-Z0-9][a-zA-Z0-9.]+@[a-zA-Z]+\.[a-zA-Z]{2,63}$`
 	emailRegex := regexp.MustCompile(regexPattern)
 
@@ -41,21 +41,21 @@ func randomStringFromSet(length int, charSet string) string {
 	return output.String()
 }
 
-func Generate()string {
+func Generate() string {
 	/*
-	Generates a random email
+		Generates a random email
 
-	Args:
-		No args
-	Returns:
-		string: A valid email
-	Example:
-		>>> Generate()
-		example@example.com
-	.. note::
-        The rules for generate an email address generally follow the
-        specifications defined by RFC 5322 (updated by RFC 5322bis),
-        which is the widely accepted standard for email address formats.
+		Args:
+			No args
+		Returns:
+			string: A valid email
+		Example:
+			>>> Generate()
+			example@example.com
+		.. note::
+	        The rules for generate an email address generally follow the
+	        specifications defined by RFC 5322 (updated by RFC 5322bis),
+	        which is the widely accepted standard for email address formats.
 	*/
 
 	localPart := randomStringFromSet(1, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") +
