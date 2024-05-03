@@ -43,19 +43,19 @@ func randomStringFromSet(length int, charSet string) string {
 
 func Generate() string {
 	/*
-		Generates a random email
+			Generates a random email
 
-		Args:
-			No args
-		Returns:
-			string: A valid email
-		Example:
-			>>> Generate()
-			example@example.com
-		.. note::
-	        The rules for generate an email address generally follow the
-	        specifications defined by RFC 5322 (updated by RFC 5322bis),
-	        which is the widely accepted standard for email address formats.
+			Args:
+				No args
+			Returns:
+				string: A valid email
+			Example:
+				>>> Generate()
+				example@example.com
+			.. note::
+		        The rules for generate an email address generally follow the
+		        specifications defined by RFC 5322 (updated by RFC 5322bis),
+		        which is the widely accepted standard for email address formats.
 	*/
 
 	localPart := randomStringFromSet(1, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") +
