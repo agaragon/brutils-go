@@ -20,12 +20,12 @@ func IsValid(cep string) bool {
 
 func Generate() string {
 	rand.Seed(time.Now().UnixNano())
-    var nums [8]int
-    for i := range nums {
-        nums[i] = rand.Intn(10) // generate a digit from 0-9
-    }
+	var nums [8]int
+	for i := range nums {
+		nums[i] = rand.Intn(10) // generate a digit from 0-9
+	}
 
-    formattedString := fmt.Sprintf("%d%d%d%d%d-%d%d%d", nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7])
+	formattedString := fmt.Sprintf("%d%d%d%d%d-%d%d%d", nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7])
 	return formattedString
 }
 
