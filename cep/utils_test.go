@@ -6,7 +6,7 @@ import (
 	"github.com/agaragon/brutils-go/cep"
 )
 
-var tables = []struct {
+var tablesValidate = []struct {
 	input    string
 	expected bool
 }{
@@ -19,8 +19,17 @@ var tables = []struct {
 	{"12345-678", true},
 }
 
+var tablesClean = []struct {
+	input    string
+	expected string
+}{
+	{"12345-678", "12345678"},
+	{"00000-000", "00000000"},
+	{"11111-111", "11111111"},
+}
+
 func TestValidate(t *testing.T) {
-	for _, table := range tables {
+	for _, table := range tablesValidate {
 		if res := cep.IsValid(table.input); res != table.expected {
 			t.Errorf("Failing for %v \t Expected: %v | Received: %v", table.input, table.expected, res)
 		}
@@ -32,6 +41,14 @@ func TestGenerate(t *testing.T) {
 		res := cep.Generate()
 		if !cep.IsValid(res) {
 			t.Errorf("An invalid cep was generated: %s", res)
+		}
+	}
+}
+
+func TestClean(t *testing.T) {
+	for _, row := range tablesClean {
+		if res := cep.Clean(row.input); res != row.expected {
+			t.Errorf("Clean failed for %s \t Expected: %s | Received: %s", row.input, row.expected, res)
 		}
 	}
 }

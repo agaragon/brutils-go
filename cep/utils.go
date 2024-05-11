@@ -33,3 +33,7 @@ func Generate() string {
 func hasValidLength(cep string) bool {
 	return len(cep) == cepSize
 }
+
+func Clean(cep string) string {
+	return helpers.OnlyNumbers(cep)
+}
