@@ -1,15 +1,34 @@
 package cep
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
+	"net/http"
 	"time"
 
 	"github.com/agaragon/brutils-go/helpers"
 )
 
+// ApiBaseURL is the base URL for the API endpoint, exposed for overriding in tests
+var ApiBaseURL = "https://viacep.com.br/ws"
+
 // Every CEP has exactly 8 characters
 const cepSize = 8
+
+type Address struct {
+	Cep string `json:"cep"`
+	Street string `json:"logradouro"`
+	Complement string `json:"complemento"`
+	Neighborhood string `json:"bairro"`
+	City string `json:"localidade"`
+	State string `json:"uf"`
+	IBGE string `json:"ibge"`
+	GIA string `json:"gia"`
+	DDD string `json:"ddd"`
+	SIAFI string `json:"siafi"`
+}
 
 // IsValid validates if a given CEP is valid
 func IsValid(cep string) bool {
@@ -36,4 +55,41 @@ func hasValidLength(cep string) bool {
 
 func Clean(cep string) string {
 	return helpers.OnlyNumbers(cep)
+}
+
+func AddressMapper(payload []byte) (Address, error) {
+	var address Address
+
+	err := json.Unmarshal(payload, &address)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return address, err
+}
+
+// FetchAddress retrieves address data from the API based on a given CEP (ZIP code).
+func FetchAddress(cep string) (Address, error) {
+	// Construct the full URL with the CEP
+	url := fmt.Sprintf("%s/%s/json/", ApiBaseURL, cep)
+
+	// Send the GET request to the API
+	resp, err := http.Get(url)
+	if err != nil {
+		return Address{}, fmt.Errorf("error making request to API: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Check the status code
+	if resp.StatusCode != http.StatusOK {
+		return Address{}, fmt.Errorf("API returned non-OK status: %d", resp.StatusCode)
+	}
+
+	// Decode the JSON response into an Address struct
+	var address Address
+	if err := json.NewDecoder(resp.Body).Decode(&address); err != nil {
+		return Address{}, fmt.Errorf("error decoding response from API: %v", err)
+	}
+
+	return address, nil
 }

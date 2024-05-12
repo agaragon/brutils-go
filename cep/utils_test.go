@@ -1,9 +1,12 @@
 package cep_test
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/agaragon/brutils-go/cep"
+	"github.com/stretchr/testify/assert"
 )
 
 var tablesValidate = []struct {
@@ -51,4 +54,85 @@ func TestClean(t *testing.T) {
 			t.Errorf("Clean failed for %s \t Expected: %s | Received: %s", row.input, row.expected, res)
 		}
 	}
+}
+
+func TestAddressMapper(t *testing.T) {
+	addressByteArray := []byte(`{
+			"cep": "01001-000",
+			"logradouro": "Praça da Sé",
+			"complemento": "lado ímpar",
+			"bairro": "Sé",
+			"localidade": "São Paulo",
+			"uf": "SP",
+			"ibge": "3550308",
+			"gia": "1004",
+			"ddd": "11",
+			"siafi": "7107"
+		}`)
+	expectedAddress := cep.Address{
+		Cep: "01001-000",
+		Street: "Praça da Sé",
+		Complement: "lado ímpar",
+		Neighborhood: "Sé",
+		City: "São Paulo",
+		State: "SP",
+		IBGE: "3550308",
+		GIA: "1004",
+		DDD: "11",
+		SIAFI: "7107",
+		
+	}
+	address, err := cep.AddressMapper(addressByteArray)
+	if err != nil {
+		t.Errorf("Error while mapping address: %v", err)
+	}
+	if address != expectedAddress {
+		t.Errorf("Address mapping failed. Expected: %v | Received: %v", expectedAddress, address)
+	}
+}
+
+func TestFetchAddress(t *testing.T) {
+	// Create a sample response that the API would return
+	apiResponse := `{
+		"cep": "01001-000",
+		"logradouro": "Praça da Sé",
+		"complemento": "lado ímpar",
+		"bairro": "Sé",
+		"localidade": "São Paulo",
+		"uf": "SP",
+		"ibge": "3550308",
+		"gia": "1004",
+		"ddd": "11",
+		"siafi": "7107"
+	}`
+	
+	// Setup a test server
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(apiResponse))
+	}))
+	defer server.Close()
+
+	// Assuming the FetchAddress method can be adjusted to accept a URL, you pass the server URL.
+	// If not, you'll need to adjust FetchAddress or abstract the base URL so it can be changed during tests.
+	oldURL := cep.ApiBaseURL // Save old URL
+	cep.ApiBaseURL = server.URL // Temporarily set to test server URL
+	defer func() { cep.ApiBaseURL = oldURL }() // Restore after test
+
+	expectedAddress := cep.Address{
+		Cep:          "01001-000",
+		Street:       "Praça da Sé",
+		Complement:   "lado ímpar",
+		Neighborhood: "Sé",
+		City:         "São Paulo",
+		State:        "SP",
+		IBGE:         "3550308",
+		GIA:          "1004",
+		DDD:          "11",
+		SIAFI:        "7107",
+	}
+
+	// Call the function under test
+	actualAddress, err := cep.FetchAddress("01001-000")
+	assert.NoError(t, err)
+	assert.Equal(t, expectedAddress, actualAddress)
 }
