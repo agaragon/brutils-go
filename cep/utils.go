@@ -3,7 +3,6 @@ package cep
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -55,17 +54,6 @@ func hasValidLength(cep string) bool {
 
 func Clean(cep string) string {
 	return helpers.OnlyNumbers(cep)
-}
-
-func AddressMapper(payload []byte) (Address, error) {
-	var address Address
-
-	err := json.Unmarshal(payload, &address)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	return address, err
 }
 
 // FetchAddress retrieves address data from the API based on a given CEP (ZIP code).

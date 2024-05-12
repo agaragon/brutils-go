@@ -56,41 +56,6 @@ func TestClean(t *testing.T) {
 	}
 }
 
-func TestAddressMapper(t *testing.T) {
-	addressByteArray := []byte(`{
-			"cep": "01001-000",
-			"logradouro": "Praça da Sé",
-			"complemento": "lado ímpar",
-			"bairro": "Sé",
-			"localidade": "São Paulo",
-			"uf": "SP",
-			"ibge": "3550308",
-			"gia": "1004",
-			"ddd": "11",
-			"siafi": "7107"
-		}`)
-	expectedAddress := cep.Address{
-		Cep: "01001-000",
-		Street: "Praça da Sé",
-		Complement: "lado ímpar",
-		Neighborhood: "Sé",
-		City: "São Paulo",
-		State: "SP",
-		IBGE: "3550308",
-		GIA: "1004",
-		DDD: "11",
-		SIAFI: "7107",
-		
-	}
-	address, err := cep.AddressMapper(addressByteArray)
-	if err != nil {
-		t.Errorf("Error while mapping address: %v", err)
-	}
-	if address != expectedAddress {
-		t.Errorf("Address mapping failed. Expected: %v | Received: %v", expectedAddress, address)
-	}
-}
-
 func TestFetchAddress(t *testing.T) {
 	// Create a sample response that the API would return
 	apiResponse := `{
