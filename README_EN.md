@@ -5,7 +5,7 @@
 
 [![CircleCI](https://circleci.com/gh/brazilian-utils/brutils-go/tree/master.svg?style=svg)](https://circleci.com/gh/brazilian-utils/brutils-go/tree/master)
 
-### [Looking for the english version?](README_EN.md)
+### [Procurando pela versão em português?](README.md)
 
 </div>
 
@@ -51,8 +51,8 @@ func main() {
 - [CEP](#cep)
   - [IsValid](#IsValid)
   - [Clean](#Clean)
-  - [Generate](#Generate)
-  - [FetchAddress](#FetchAddress)
+  - [remove_symbols_cep](#remove_symbols_cep)
+  - [generate_cep](#generate_cep)
 
 ## CPF
 
@@ -158,92 +158,5 @@ func main() {
     if cep.IsValid("00000-00000") {
       fmt.Println("CEP inválido")
     }
-}
-```
-
-### Clean
-
-Remove quaisquer caracteres não numéricos do CEP devolvendo apensa os números presentes.
-
-Argumentos:
-  * cep (string): A string contendo o CEP a ser verificado.
-
-Retorno:
-  * bool: True se o CEP for válido (8 dígitos), False caso contrário.
-
-Exemplo:
-
-```golang
-package main
-
-import (
-  "fmt"
-  "github.com/agaragon/brutils-go/cep"
-)
-
-func main() {
-    fmt.Println(cep.Clean("00000-010"))
-    fmt.Println(cep.Clean("00000000"))
-}
-"00000010"
-"00000000"
-```
-
-### Generate
-
-Gera um número de CEP (Código de Endereçamento Postal) aleatório de 8 dígitos
-como uma string.
-
-Retorna:
-  * string: Um número de 8 dígitos gerado aleatoriamente com o traço separador.
-
-Exemplo:
-
-```golang
-package main
-
-import (
-    "fmt"
-    "github.com/agaragon/brutils-go/cpf"
-)
-
-func main() {
-    fmt.Println(cpf.Generate())
-}
-"12345-123"
-```
-
-### FetchAddress
-
-Gera busca o endereço correspondente ao CEP passado.
-
-Retorna:
-  * Address: Os dados do endereço correpondente ao cep passado.
-
-Exemplo:
-
-```golang
-package main
-
-import (
-    "fmt"
-    "github.com/agaragon/brutils-go/cpf"
-)
-
-func main() {
-    fmt.Println(cpf.FetchAddress("01001-000"))
-}
-
-{
-    "cep": "01001-000",
-    "logradouro": "Praça da Sé",
-    "complemento": "lado ímpar",
-    "bairro": "Sé",
-    "localidade": "São Paulo",
-    "uf": "SP",
-    "ibge": "3550308",
-    "gia": "1004",
-    "ddd": "11",
-    "siafi": "7107"
 }
 ```
