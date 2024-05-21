@@ -1,3 +1,4 @@
+
 <div align="center">
 <h1>🇧🇷 Brazilian Utils</h1>
 
@@ -5,31 +6,28 @@
 
 [![CircleCI](https://circleci.com/gh/brazilian-utils/brutils-go/tree/master.svg?style=svg)](https://circleci.com/gh/brazilian-utils/brutils-go/tree/master)
 
-### [Procurando pela versão em português?](README.md)
+### [Looking for the Portuguese version?](README.md)
 
 </div>
 
-# Introdução
+# Introduction
 
-Brazilian Utils é uma biblioteca com foco na resolução de problemas que enfrentamos diariamente no
-desenvolvimento de aplicações para o business Brasileiro.
+Brazilian Utils is a library focused on solving problems we face daily in developing applications for Brazilian businesses.
 
-- [Instalação](#instalação)
-- [Utilização](#utilização)
-- [Utilitários](#utilitários)
-- [Novos Utilitários e Reportar Bugs](#novos-utilitários-e-reportar-bugs)
-- [Dúvidas? Ideias?](#dúvidas-ideias)
-- [Contribuindo com o Código do Projeto](#contribuindo-com-o-código-do-projeto)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Utilities](#utilities)
+- [New Utilities and Reporting Bugs](#new-utilities-and-reporting-bugs)
+- [Questions? Ideas?](#questions-ideas)
+- [Contributing to the Project Code](#contributing-to-the-project-code)
 
-
-# Instalação
+# Installation
 
 ```shell
 go get -u -v github.com/agaragon/brutils-go
 ```
 
-# Utilização
-
+# Usage
 
 ```golang
 package main
@@ -42,7 +40,7 @@ func main() {
 }
 ```
 
-# Utilitários
+# Utilities
 
 - [CPF](#cpf)
   - [IsValid](#IsValid)
@@ -51,25 +49,23 @@ func main() {
 - [CEP](#cep)
   - [IsValid](#IsValid)
   - [Clean](#Clean)
-  - [remove_symbols_cep](#remove_symbols_cep)
-  - [generate_cep](#generate_cep)
+  - [Generate](#Generate)
+  - [FetchAddress](#FetchAddress)
 
 ## CPF
 
 ### IsValid
 
-Retorna se os dígitos de verificação do CPF fornecido
-correspondem ao seu número base. Esta função não verifica a existência do CPF;
-ela apenas valida o formato da string.
+Returns whether the provided CPF's verification digits match its base number. This function does not verify the existence of the CPF; it only validates the string format.
 
-Argumentos:
-  * cpf (string): O CPF a ser validado, uma string de 11 dígitos
+Arguments:
+  * cpf (string): The CPF to be validated, an 11-digit string
 
-Retorna:
-  * bool: Verdadeiro se os dígitos de verificação corresponderem ao número base,
-          Falso caso contrário.
+Returns:
+  * bool: True if the verification digits match the base number,
+          False otherwise.
 
-Exemplo:
+Example:
 
 ```golang
 package main
@@ -81,10 +77,10 @@ import (
 
 func main() {
     if cpf.IsValid("82178537464") {
-      fmt.Println("CPF válido")
+      fmt.Println("Valid CPF")
     }
     if cpf.IsValid("00011122233") {
-      fmt.Println("CPF inválido")
+      fmt.Println("Invalid CPF")
     }
 }
 ```
@@ -93,19 +89,16 @@ func main() {
 
 ### IsValid
 
-Verifica se os dígitos de verificação do CNPJ (Cadastro Nacional da Pessoa
-Jurídica) fornecido correspondem ao seu número base. A entrada deve ser uma
-string de dígitos com o comprimento apropriado. Esta função não verifica a
-existência do CNPJ; ela só valida o formato da string.
+Checks whether the provided CNPJ's (Cadastro Nacional da Pessoa Jurídica) verification digits match its base number. The input must be a string of digits of the appropriate length. This function does not verify the existence of the CNPJ; it only validates the string format.
 
-Argumentos:
-  * cnpj (string): O CNPJ a ser validado.
+Arguments:
+  * cnpj (string): The CNPJ to be validated.
 
-Retorna:
-  * bool: True se os dígitos de verificação corresponderem ao número base,
-        False caso contrário.
+Returns:
+  * bool: True if the verification digits match the base number,
+          False otherwise.
 
-Exemplo:
+Example:
 
 ```golang
 package main
@@ -117,11 +110,11 @@ import (
 
 func main() {
     if cnpj.IsValid("03560714000142") {
-      fmt.Println("CNPJ válido")
+      fmt.Println("Valid CNPJ")
     }
 
     if cnpj.IsValid("00111222000133") {
-      fmt.Println("CNPJ inválido")
+      fmt.Println("Invalid CNPJ")
     }
 }
 ```
@@ -130,18 +123,15 @@ func main() {
 
 ### IsValid
 
-Verifica se um CEP (Código de Endereçamento Postal) brasileiro é válido.
-Para que um CEP seja considerado válido, a entrada deve ser uma string contendo
-exatamente 8 dígitos. Esta função não verifica se o CEP é um CEP real, pois
-valida apenas o formato da string.
+Checks whether a Brazilian CEP (Postal Address Code) is valid. For a CEP to be considered valid, the input must be a string containing exactly 8 digits. This function does not verify if the CEP is a real CEP, as it only validates the string format.
 
-Argumentos:
-  * cep (string): A string contendo o CEP a ser verificado.
+Arguments:
+  * cep (string): The string containing the CEP to be verified.
 
-Retorno:
-  * bool: True se o CEP for válido (8 dígitos), False caso contrário.
+Returns:
+  * bool: True if the CEP is valid (8 digits), False otherwise.
 
-Exemplo:
+Example:
 
 ```golang
 package main
@@ -153,10 +143,108 @@ import (
 
 func main() {
     if cep.IsValid("00000-010") {
-      fmt.Println("CEP válido")
+      fmt.Println("Valid CEP")
     }
     if cep.IsValid("00000-00000") {
-      fmt.Println("CEP inválido")
+      fmt.Println("Invalid CEP")
     }
 }
 ```
+
+### Clean
+
+Removes any non-numeric characters from the CEP, returning only the numbers present.
+
+Arguments:
+  * cep (string): The string containing the CEP to be cleaned.
+
+Returns:
+  * string: The cleaned CEP string with only numeric characters.
+
+Example:
+
+```golang
+package main
+
+import (
+  "fmt"
+  "github.com/agaragon/brutils-go/cep"
+)
+
+func main() {
+    fmt.Println(cep.Clean("00000-010"))
+    fmt.Println(cep.Clean("00000000"))
+}
+"00000010"
+"00000000"
+```
+
+### Generate
+
+Generates a random 8-digit CEP (Postal Address Code) as a string.
+
+Returns:
+  * string: A randomly generated 8-digit number with a separator dash.
+
+Example:
+
+```golang
+package main
+
+import (
+    "fmt"
+    "github.com/agaragon/brutils-go/cep"
+)
+
+func main() {
+    fmt.Println(cep.Generate())
+}
+"12345-123"
+```
+
+### FetchAddress
+
+Fetches the address corresponding to the provided CEP.
+
+Returns:
+  * Address: The address data corresponding to the provided CEP.
+
+Example:
+
+```golang
+package main
+
+import (
+    "fmt"
+    "github.com/agaragon/brutils-go/cep"
+)
+
+func main() {
+    fmt.Println(cep.FetchAddress("01001-000"))
+}
+
+{
+    "cep": "01001-000",
+    "logradouro": "Praça da Sé",
+    "complemento": "lado ímpar",
+    "bairro": "Sé",
+    "localidade": "São Paulo",
+    "uf": "SP",
+    "ibge": "3550308",
+    "gia": "1004",
+    "ddd": "11",
+    "siafi": "7107"
+}
+```
+
+# New Utilities and Reporting Bugs
+
+If you have any suggestions for new utilities or find any bugs, please open an issue on our [GitHub page](https://github.com/agaragon/brutils-go).
+
+# Questions? Ideas?
+
+Feel free to reach out if you have any questions or ideas. You can contact us through our [GitHub page](https://github.com/agaragon/brutils-go).
+
+# Contributing to the Project Code
+
+We welcome contributions! If you would like to contribute to the project, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
